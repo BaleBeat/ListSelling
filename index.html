@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Color Calculator</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <div class="form-container">
+            <h1>Color Mixed</h1>
+            <form id="colorForm">
+                <input type="text" id="desiredColor" placeholder="(Hex)">
+                <input type="number" id="totalGram" placeholder="Total Gram">
+                <div class="format-options">
+                    <input type="radio" id="rgb" name="colorType" value="rgb" checked>
+                    <label for="rgb">RGB</label>
+                    <input type="radio" id="cmyk" name="colorType" value="cmyk">
+                    <label for="cmyk">CMYK</label>
+                </div>
+                <button type="submit" class="button">Hitung</button>
+            </form>
+            <div id="colorPreviewContainer" class="hidden">
+                <div id="colorPreview"></div>
+            </div>
+            <table id="result" class="hidden">
+                <thead>
+                    <tr>
+                        <th>Color</th>
+                        <th>Grams</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+
+</html>

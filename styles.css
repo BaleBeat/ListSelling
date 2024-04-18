@@ -1,0 +1,131 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "poppins", sans-serif;
+}
+
+body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    background: url('689.JPG') no-repeat;
+}
+
+.container {
+    backdrop-filter: blur(20px);
+    width: 420px;
+    color: #ffff;
+}
+
+.form-container {
+    border-radius: 4px;
+    padding: 20px;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+    margin: 10px;
+    max-width: 400px;
+    width: 100%;
+    font-weight: bold;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+    color: #fff;
+}
+
+input[type="text"],
+input[type="number"] {
+    width: calc(100% - 24px);
+    padding: 12px;
+    margin-bottom: 20px;
+    border: 2px solid grey;
+    border-radius: 20px;
+    font-size: 16px;
+    background: transparent;
+    color: #fff;
+}
+
+/* Set the placeholder color */
+::placeholder {
+    color: #fff;
+}
+
+/* Override placeholder color when input is focused */
+input[type="text"]:focus::placeholder,
+input[type="number"]:focus::placeholder {
+    color: #ccc;
+}
+
+button {
+    width: 100%;
+    padding: 15px;
+    border: none;
+    border-radius: 20px;
+    font-size: 16px;
+    cursor: pointer;
+    text-transform: uppercase;
+    background-color: #ff0000;
+    color: #fff;
+    font-weight: bold;
+}
+
+button:hover {
+    background-color: #cc0000;
+}
+
+.format-options {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 20px;
+    color: #fff;
+}
+
+.format-options input[type="radio"] {
+    display: none;
+}
+
+.format-options label {
+    cursor: pointer;
+    padding: 10px 20px;
+    background-color: transparent;
+    color: #fff;
+    border: 2px solid brown;
+    border-radius: 20px;
+    transition: background-color 0.3s ease;
+}
+
+.format-options input[type="radio"]:checked + label {
+    background-color: red;
+    color: #fff;
+}
+
+#result {
+    width: 100%;
+    margin-top: 20px;
+    color: #fff;
+}
+
+#result th, #result td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+#result th {
+    background-color: #f2f2f2;
+}
+
+.colorPreview {
+    width: 100px;
+    height: 50px;
+    border-radius: 4px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.hidden {
+    display: none;
+}
