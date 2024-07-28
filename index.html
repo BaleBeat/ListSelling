@@ -1,42 +1,97 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Color Calculator</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>My Inventory App</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:wght@400;700&display=swap">
 </head>
 <body>
     <div class="container">
-        <div class="form-container">
-            <h1>Color Mixed</h1>
-            <form id="colorForm">
-                <input type="text" id="desiredColor" placeholder="(Hex)">
-                <input type="number" id="totalGram" placeholder="Total Gram">
-                <div class="format-options">
-                    <input type="radio" id="rgb" name="colorType" value="rgb" checked>
-                    <label for="rgb">RGB</label>
-                    <input type="radio" id="cmyk" name="colorType" value="cmyk">
-                    <label for="cmyk">CMYK</label>
+        <h1>My Inventory App</h1>
+        <nav class="menu">
+            <button class="menu-btn">Input</button>
+            <button class="menu-btn">Tabel</button>
+            <button class="menu-btn">Total Keseluruhan</button>
+        </nav>
+
+        <div class="menu-content">
+            <form id="itemForm">
+                <div class="form-group">
+                    <label for="itemType">Jenis Pembelian</label>
+                    <select id="itemType" required>
+                        <option value="">Pilih Jenis Pembelian</option>
+                        <option value="Jacket">Jacket</option>
+                        <option value="Celana">Celana</option>
+                        <option value="Kaos">Kaos</option>
+                        <option value="Hoodie">Hoodie</option>
+                        <option value="Crewneck">Crewneck</option>
+                    </select>
                 </div>
-                <button type="submit" class="button">Hitung</button>
+                <div class="form-group">
+                    <label for="itemQuantity">Jumlah</label>
+                    <input type="number" id="itemQuantity" placeholder="Jumlah" required>
+                </div>
+                <div class="form-group">
+                    <label for="itemPrice">Harga</label>
+                    <input type="number" id="itemPrice" placeholder="Harga" required>
+                </div>
+                <div class="form-group">
+                    <label for="paymentType">Jenis Pembayaran</label>
+                    <select id="paymentType" required>
+                        <option value="">Pilih Jenis Pembayaran</option>
+                        <option value="Cash">Cash</option>
+                        <option value="QRIS">QRIS</option>
+                    </select>
+                </div>
+                <button type="submit">Tambah Barang</button>
             </form>
-            <div id="colorPreviewContainer" class="hidden">
-                <div id="colorPreview"></div>
-            </div>
-            <table id="result" class="hidden">
+        </div>
+
+        <div class="menu-content">
+            <table id="itemTable">
                 <thead>
                     <tr>
-                        <th>Color</th>
-                        <th>Grams</th>
+                        <th>Jenis Pembelian</th>
+                        <th>Jumlah</th>
+                        <th>Harga</th>
+                        <th>Jenis Pembayaran</th>
+                        <th>Tanggal & Waktu</th>
+                        <th>Total Harga</th>
+                        <th>Aksi</th>
                     </tr>
                 </thead>
-                <tbody></tbody>
+                <tbody>
+                    <!-- Data akan ditampilkan di sini -->
+                </tbody>
             </table>
         </div>
-    </div>
 
+        <div class="menu-content">
+            <h3>Total Keseluruhan</h3>
+            <div class="totals">
+                <table id="summaryTable">
+                    <thead>
+                        <tr>
+                            <th>Jenis Pembelian</th>
+                            <th>Jumlah</th>
+                            <th>Total Harga</th>
+                        </tr>
+                    </thead>
+                    <tbody id="totalItems">
+                        <!-- Total item akan ditampilkan di sini -->
+                    </tbody>
+                </table>
+                <h3>Total Uang Keseluruhan: <span id="grandTotal">Rp 0</span></h3>
+            </div>
+        </div>
+        
+        <footer>
+<p class="encouragement">Aku i kerjo cak, Ojo ditawar nemen nemen poo</p>
+            <p>Developed by Felisa X TRIXX</p>
+            </footer>
+    </div>
     <script src="script.js"></script>
 </body>
-
 </html>
