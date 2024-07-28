@@ -5,6 +5,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const itemTableBody = document.querySelector('#itemTable tbody');
     const totalItemsBody = document.getElementById('totalItems');
     const grandTotalElement = document.getElementById('grandTotal');
+    const tableResponsive = document.querySelector('.table-responsive');
 
     let items = JSON.parse(localStorage.getItem('items')) || [];
 
@@ -47,21 +48,39 @@ document.addEventListener('DOMContentLoaded', function () {
     // Fungsi untuk mengupdate tabel
     function updateTable() {
         itemTableBody.innerHTML = '';
+        tableResponsive.innerHTML = ''; // Clear the responsive table content
+
         items.forEach((item, index) => {
-            const row = document.createElement('tr');
-            row.innerHTML = `
-                <td>${item.itemType}</td>
-                <td>${item.itemQuantity}</td>
-                <td>Rp ${item.itemPrice.toLocaleString()}</td>
-                <td>${item.paymentType}</td>
-                <td>${item.dateTime}</td>
-                <td>Rp ${item.totalPrice.toLocaleString()}</td>
-                <td>
+            if (window.innerWidth > 600) { // Tampilkan tabel pada perangkat besar
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${item.itemType}</td>
+                    <td>${item.itemQuantity}</td>
+                    <td>Rp ${item.itemPrice.toLocaleString()}</td>
+                    <td>${item.paymentType}</td>
+                    <td>${item.dateTime}</td>
+                    <td>Rp ${item.totalPrice.toLocaleString()}</td>
+                    <td>
+                        <button class="edit-btn" onclick="editItem(${index})">Edit</button>
+                        <button class="delete-btn" onclick="deleteItem(${index})">Hapus</button>
+                    </td>
+                `;
+                itemTableBody.appendChild(row);
+            } else { // Tampilkan format kartu pada perangkat kecil
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.innerHTML = `
+                    <h4>${item.itemType}</h4>
+                    <p><strong>Jumlah:</strong> ${item.itemQuantity}</p>
+                    <p><strong>Harga:</strong> Rp ${item.itemPrice.toLocaleString()}</p>
+                    <p><strong>Jenis Pembayaran:</strong> ${item.paymentType}</p>
+                    <p><strong>Tanggal & Waktu:</strong> ${item.dateTime}</p>
+                    <p><strong>Total Harga:</strong> Rp ${item.totalPrice.toLocaleString()}</p>
                     <button class="edit-btn" onclick="editItem(${index})">Edit</button>
                     <button class="delete-btn" onclick="deleteItem(${index})">Hapus</button>
-                </td>
-            `;
-            itemTableBody.appendChild(row);
+                `;
+                tableResponsive.appendChild(card);
+            }
         });
     }
 
@@ -118,6 +137,11 @@ document.addEventListener('DOMContentLoaded', function () {
     };
 
     itemForm.addEventListener('submit', addItem);
-    updateTable(); // Load data saat halaman dimuat
-    updateTotal(); // Hitung total saat halaman dimuat
+
+    // Update tabel dan total saat halaman dimuat
+    updateTable();
+    updateTotal();
+
+    // Update tampilan tabel jika ukuran jendela diubah
+    window.addEventListener('resize', updateTable);
 });
