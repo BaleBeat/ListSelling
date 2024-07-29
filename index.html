@@ -3,47 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>List Penjualan</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>My Inventory App</title>
+    <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:wght@400;700&display=swap">
 </head>
 <body>
     <div class="container">
         <h1>List harian</h1>
         <nav class="menu">
-            <button class="menu-btn">Input</button>
             <button class="menu-btn">Stock</button>
+            <button class="menu-btn">Input</button>
             <button class="menu-btn">Tabel</button>
             <button class="menu-btn">Total Keseluruhan</button>
         </nav>
-
-        <div class="menu-content">
-            <form id="itemForm">
-                <div class="form-group">
-                    <label for="itemType">Jenis Penjualan</label>
-                    <select id="itemType" required>
-                        <!-- Options akan diisi dari stok -->
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="itemQuantity">Jumlah</label>
-                    <input type="number" id="itemQuantity" placeholder="Jumlah" required>
-                </div>
-                <div class="form-group">
-                    <label for="itemPrice">Harga</label>
-                    <input type="number" id="itemPrice" placeholder="Harga" required>
-                </div>
-                <div class="form-group">
-                    <label for="paymentType">Jenis Pembayaran</label>
-                    <select id="paymentType" required>
-                        <option value="">Pilih Jenis Pembayaran</option>
-                        <option value="Cash">Cash</option>
-                        <option value="QRIS">QRIS</option>
-                    </select>
-                </div>
-                <button type="submit">Tambah Penjualan</button>
-            </form>
-        </div>
 
         <div class="menu-content">
             <h2>Input Stock</h2>
@@ -73,6 +45,34 @@
                     </tbody>
                 </table>
             </div>
+        </div>
+
+        <div class="menu-content">
+            <form id="itemForm">
+                <div class="form-group">
+                    <label for="itemType">Jenis Penjualan</label>
+                    <select id="itemType" required>
+                        <!-- Options akan diisi dari stok -->
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="itemQuantity">Jumlah</label>
+                    <input type="number" id="itemQuantity" placeholder="Jumlah" required>
+                </div>
+                <div class="form-group">
+                    <label for="itemPrice">Harga</label>
+                    <input type="number" id="itemPrice" placeholder="Harga" required>
+                </div>
+                <div class="form-group">
+                    <label for="paymentType">Jenis Pembayaran</label>
+                    <select id="paymentType" required>
+                        <option value="">Pilih Jenis Pembayaran</option>
+                        <option value="Cash">Cash</option>
+                        <option value="QRIS">QRIS</option>
+                    </select>
+                </div>
+                <button type="submit">Tambah Penjualan</button>
+            </form>
         </div>
 
         <div class="menu-content">
