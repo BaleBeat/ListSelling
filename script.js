@@ -1,147 +1,230 @@
-document.addEventListener('DOMContentLoaded', function () {
-    const menuButtons = document.querySelectorAll('.menu-btn');
+// Inisialisasi data stok dan penjualan sebagai array kosong
+let stock = [];
+let sales = [];
+
+// Fungsi untuk menampilkan konten menu berdasarkan tombol yang diklik
+function showMenuContent(index) {
     const menuContents = document.querySelectorAll('.menu-content');
-    const itemForm = document.getElementById('itemForm');
-    const itemTableBody = document.querySelector('#itemTable tbody');
-    const totalItemsBody = document.getElementById('totalItems');
-    const grandTotalElement = document.getElementById('grandTotal');
-    const tableResponsive = document.querySelector('.table-responsive');
+    menuContents.forEach((content, i) => {
+        content.style.display = i === index ? 'block' : 'none';
+    });
+}
 
-    let items = JSON.parse(localStorage.getItem('items')) || [];
+// Inisialisasi menu button
+document.querySelectorAll('.menu-btn').forEach((btn, index) => {
+    btn.addEventListener('click', () => showMenuContent(index));
+});
 
-    // Fungsi untuk menampilkan menu
-    function showMenu(menuIndex) {
-        menuContents.forEach((content, index) => {
-            content.classList.toggle('active', index === menuIndex);
-        });
+// Fungsi untuk memperbarui daftar opsi jenis penjualan berdasarkan stok
+function updateItemTypeOptions() {
+    const itemTypeSelect = document.getElementById('itemType');
+    itemTypeSelect.innerHTML = '<option value="">Pilih Jenis Penjualan</option>';
+
+    stock.forEach(item => {
+        const option = document.createElement('option');
+        option.value = item.type;
+        option.textContent = item.type;
+        itemTypeSelect.appendChild(option);
+    });
+}
+
+// Fungsi untuk menyimpan data ke localStorage
+function saveData() {
+    localStorage.setItem('stock', JSON.stringify(stock));
+    localStorage.setItem('sales', JSON.stringify(sales));
+}
+
+// Fungsi untuk memuat data dari localStorage
+function loadData() {
+    const savedStock = localStorage.getItem('stock');
+    const savedSales = localStorage.getItem('sales');
+
+    if (savedStock) {
+        stock = JSON.parse(savedStock);
     }
 
-    // Tampilkan menu input sebagai default
-    showMenu(0);
+    if (savedSales) {
+        sales = JSON.parse(savedSales);
+    }
 
-    menuButtons.forEach((button, index) => {
-        button.addEventListener('click', () => showMenu(index));
+    // Pastikan stock dan sales selalu berupa array
+    if (!Array.isArray(stock)) {
+        stock = [];
+    }
+
+    if (!Array.isArray(sales)) {
+        sales = [];
+    }
+}
+
+// Fungsi untuk memperbarui tabel stok barang
+function updateStockTable() {
+    const stockTableBody = document.querySelector('#stockTable tbody');
+    stockTableBody.innerHTML = '';
+
+    stock.forEach(item => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${item.type}</td>
+            <td>${item.quantity}</td>
+            <td>${item.remainingStock}</td>
+            <td>
+                <button class="delete-btn" data-type="${item.type}">Hapus</button>
+            </td>
+        `;
+        stockTableBody.appendChild(row);
+    });
+}
+
+// Fungsi untuk memperbarui tabel riwayat penjualan
+function updateSalesTable() {
+    const itemTableBody = document.querySelector('#itemTable tbody');
+    itemTableBody.innerHTML = '';
+
+    sales.forEach((sale, index) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${sale.type}</td>
+            <td>${sale.quantity}</td>
+            <td>${sale.price}</td>
+            <td>${sale.paymentType}</td>
+            <td>${sale.dateTime}</td>
+            <td>${sale.totalPrice}</td>
+            <td>
+                <button class="delete-btn" data-index="${index}">Hapus</button>
+            </td>
+        `;
+        itemTableBody.appendChild(row);
+    });
+}
+
+// Fungsi untuk memperbarui tabel total penjualan
+function updateTotalSalesTable() {
+    const totalItems = document.getElementById('totalItems');
+    totalItems.innerHTML = '';
+
+    const totalSummary = sales.reduce((summary, sale) => {
+        const existingItem = summary.find(item => item.type === sale.type);
+        if (existingItem) {
+            existingItem.quantity += sale.quantity;
+            existingItem.totalPrice += sale.totalPrice;
+        } else {
+            summary.push({
+                type: sale.type,
+                quantity: sale.quantity,
+                totalPrice: sale.totalPrice
+            });
+        }
+        return summary;
+    }, []);
+
+    totalSummary.forEach(item => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td>${item.type}</td>
+            <td>${item.quantity}</td>
+            <td>${item.totalPrice.toFixed(2)}</td>
+        `;
+        totalItems.appendChild(row);
     });
 
-    // Fungsi untuk menambahkan item
-    function addItem(event) {
-        event.preventDefault();
+    const grandTotalElement = document.getElementById('grandTotal');
+    const grandTotal = totalSummary.reduce((total, item) => total + item.totalPrice, 0);
+    grandTotalElement.textContent = `Rp ${grandTotal.toLocaleString()}`;
+}
 
-        const itemType = document.getElementById('itemType').value;
-        const itemQuantity = parseInt(document.getElementById('itemQuantity').value);
-        const itemPrice = parseInt(document.getElementById('itemPrice').value);
-        const paymentType = document.getElementById('paymentType').value;
-        const dateTime = new Date().toLocaleString();
-        const totalPrice = itemQuantity * itemPrice;
+// Event listener untuk penambahan penjualan
+document.getElementById('itemForm').addEventListener('submit', function(event) {
+    event.preventDefault();
 
-        if (itemType && itemQuantity > 0 && itemPrice > 0 && paymentType) {
-            const newItem = { itemType, itemQuantity, itemPrice, paymentType, dateTime, totalPrice };
-            items.push(newItem);
-            localStorage.setItem('items', JSON.stringify(items));
-            updateTable();
-            updateTotal();
-            itemForm.reset();
-            showMenu(1); // Tampilkan tabel setelah menambah item
+    const type = document.getElementById('itemType').value;
+    const quantity = parseInt(document.getElementById('itemQuantity').value);
+    const price = parseInt(document.getElementById('itemPrice').value);
+    const paymentType = document.getElementById('paymentType').value;
+    const dateTime = new Date().toLocaleString();
+    const totalPrice = quantity * price;
+
+    // Update stok barang
+    const stockItem = stock.find(item => item.type === type);
+    if (stockItem) {
+        if (stockItem.remainingStock >= quantity) {
+            stockItem.remainingStock -= quantity;
+            sales.push({ type, quantity, price, paymentType, dateTime, totalPrice });
+            saveData();
+            updateSalesTable();
+            updateTotalSalesTable();
+            updateStockTable();
+        } else {
+            alert('Stok tidak mencukupi');
         }
+    } else {
+        alert('Jenis barang tidak ditemukan dalam stok');
     }
-
-    // Fungsi untuk mengupdate tabel
-    function updateTable() {
-        itemTableBody.innerHTML = '';
-        tableResponsive.innerHTML = ''; // Clear the responsive table content
-
-        items.forEach((item, index) => {
-            if (window.innerWidth > 600) { // Tampilkan tabel pada perangkat besar
-                const row = document.createElement('tr');
-                row.innerHTML = `
-                    <td>${item.itemType}</td>
-                    <td>${item.itemQuantity}</td>
-                    <td>Rp ${item.itemPrice.toLocaleString()}</td>
-                    <td>${item.paymentType}</td>
-                    <td>${item.dateTime}</td>
-                    <td>Rp ${item.totalPrice.toLocaleString()}</td>
-                    <td>
-                        <button class="edit-btn" onclick="editItem(${index})">Edit</button>
-                        <button class="delete-btn" onclick="deleteItem(${index})">Hapus</button>
-                    </td>
-                `;
-                itemTableBody.appendChild(row);
-            } else { // Tampilkan format kartu pada perangkat kecil
-                const card = document.createElement('div');
-                card.className = 'card';
-                card.innerHTML = `
-                    <h4>${item.itemType}</h4>
-                    <p><strong>Jumlah:</strong> ${item.itemQuantity}</p>
-                    <p><strong>Harga:</strong> Rp ${item.itemPrice.toLocaleString()}</p>
-                    <p><strong>Jenis Pembayaran:</strong> ${item.paymentType}</p>
-                    <p><strong>Tanggal & Waktu:</strong> ${item.dateTime}</p>
-                    <p><strong>Total Harga:</strong> Rp ${item.totalPrice.toLocaleString()}</p>
-                    <button class="edit-btn" onclick="editItem(${index})">Edit</button>
-                    <button class="delete-btn" onclick="deleteItem(${index})">Hapus</button>
-                `;
-                tableResponsive.appendChild(card);
-            }
-        });
-    }
-
-    // Fungsi untuk mengupdate total
-    function updateTotal() {
-        const summary = items.reduce((acc, item) => {
-            acc[item.itemType] = (acc[item.itemType] || 0) + item.itemQuantity;
-            acc[item.itemType + '_total'] = (acc[item.itemType + '_total'] || 0) + item.totalPrice;
-            acc.total += item.totalPrice;
-            return acc;
-        }, { total: 0 });
-
-        totalItemsBody.innerHTML = '';
-        for (const [key, value] of Object.entries(summary)) {
-            if (key !== 'total') {
-                if (key.includes('_total')) {
-                    const itemType = key.split('_total')[0];
-                    const row = document.createElement('tr');
-                    row.innerHTML = `
-                        <td>${itemType}</td>
-                        <td>${summary[itemType]}</td>
-                        <td>Rp ${value.toLocaleString()}</td>
-                    `;
-                    totalItemsBody.appendChild(row);
-                }
-            }
-        }
-
-        grandTotalElement.textContent = `Rp ${summary.total.toLocaleString()}`;
-    }
-
-    // Fungsi untuk menghapus item
-    window.deleteItem = function (index) {
-        items.splice(index, 1);
-        localStorage.setItem('items', JSON.stringify(items));
-        updateTable();
-        updateTotal();
-    };
-
-    // Fungsi untuk mengedit item
-    window.editItem = function (index) {
-        const item = items[index];
-        document.getElementById('itemType').value = item.itemType;
-        document.getElementById('itemQuantity').value = item.itemQuantity;
-        document.getElementById('itemPrice').value = item.itemPrice;
-        document.getElementById('paymentType').value = item.paymentType;
-
-        // Menghapus item yang sedang diedit dari list
-        items.splice(index, 1);
-        localStorage.setItem('items', JSON.stringify(items));
-        updateTable();
-        updateTotal();
-        showMenu(0); // Kembali ke menu input
-    };
-
-    itemForm.addEventListener('submit', addItem);
-
-    // Update tabel dan total saat halaman dimuat
-    updateTable();
-    updateTotal();
-
-    // Update tampilan tabel jika ukuran jendela diubah
-    window.addEventListener('resize', updateTable);
 });
+
+// Event listener untuk penambahan stok
+document.getElementById('stockForm').addEventListener('submit', function(event) {
+    event.preventDefault();
+
+    const type = document.getElementById('stockType').value;
+    const quantity = parseInt(document.getElementById('stockQuantity').value);
+
+    const existingStock = stock.find(item => item.type === type);
+    if (existingStock) {
+        existingStock.quantity += quantity;
+        existingStock.remainingStock += quantity;
+    } else {
+        stock.push({ type, quantity, remainingStock: quantity });
+    }
+
+    saveData();
+    updateItemTypeOptions();
+    updateStockTable();
+});
+
+// Event listener untuk menghapus penjualan
+document.querySelector('#itemTable tbody').addEventListener('click', function(event) {
+    if (event.target.classList.contains('delete-btn')) {
+        const index = event.target.getAttribute('data-index');
+        const sale = sales[index];
+
+        // Mengembalikan stok barang
+        const stockItem = stock.find(item => item.type === sale.type);
+        if (stockItem) {
+            stockItem.remainingStock += sale.quantity;
+        }
+
+        sales.splice(index, 1);
+        saveData();
+        updateSalesTable();
+        updateTotalSalesTable();
+        updateStockTable();
+    }
+});
+
+// Event listener untuk menghapus stok
+document.querySelector('#stockTable tbody').addEventListener('click', function(event) {
+    if (event.target.classList.contains('delete-btn')) {
+        const type = event.target.getAttribute('data-type');
+
+        const stockIndex = stock.findIndex(item => item.type === type);
+        if (stockIndex !== -1) {
+            stock.splice(stockIndex, 1);
+            saveData();
+            updateItemTypeOptions();
+            updateStockTable();
+        }
+    }
+});
+
+// Muat data dari localStorage saat halaman dimuat
+window.addEventListener('load', function() {
+    loadData();
+    updateItemTypeOptions();
+    updateSalesTable();
+    updateTotalSalesTable();
+    updateStockTable();
+});
+
+// Tampilkan konten menu input sebagai tampilan awal
+showMenuContent(0);
