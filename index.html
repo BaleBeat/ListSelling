@@ -4,14 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Inventory App</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Lora:wght@400;700&display=swap">
 </head>
 <body>
     <div class="container">
-        <h1>List Pembeli Felisa</h1>
+        <h1>List harian</h1>
         <nav class="menu">
             <button class="menu-btn">Input</button>
+            <button class="menu-btn">Stock</button>
             <button class="menu-btn">Tabel</button>
             <button class="menu-btn">Total Keseluruhan</button>
         </nav>
@@ -19,14 +20,9 @@
         <div class="menu-content">
             <form id="itemForm">
                 <div class="form-group">
-                    <label for="itemType">Jenis Pembelian</label>
+                    <label for="itemType">Jenis Penjualan</label>
                     <select id="itemType" required>
-                        <option value="">Pilih Jenis Pembelian</option>
-                        <option value="Jacket">Jacket</option>
-                        <option value="Celana">Celana</option>
-                        <option value="Kaos">Kaos</option>
-                        <option value="Hoodie">Hoodie</option>
-                        <option value="Crewneck">Crewneck</option>
+                        <!-- Options akan diisi dari stok -->
                     </select>
                 </div>
                 <div class="form-group">
@@ -45,8 +41,38 @@
                         <option value="QRIS">QRIS</option>
                     </select>
                 </div>
-                <button type="submit">Tambah Barang</button>
+                <button type="submit">Tambah Penjualan</button>
             </form>
+        </div>
+
+        <div class="menu-content">
+            <h2>Input Stock</h2>
+            <form id="stockForm">
+                <div class="form-group">
+                    <label for="stockType">Jenis Barang</label>
+                    <input type="text" id="stockType" placeholder="Jenis Barang" required>
+                </div>
+                <div class="form-group">
+                    <label for="stockQuantity">Jumlah</label>
+                    <input type="number" id="stockQuantity" placeholder="Jumlah" required>
+                </div>
+                <button type="submit">Tambah Stok</button>
+            </form>
+            <div class="table-responsive">
+                <table id="stockTable">
+                    <thead>
+                        <tr>
+                            <th>Jenis Barang</th>
+                            <th>Jumlah</th>
+                            <th>Sisa Stok</th>
+                            <th>Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Data stok akan ditampilkan di sini oleh JavaScript -->
+                    </tbody>
+                </table>
+            </div>
         </div>
 
         <div class="menu-content">
@@ -54,7 +80,7 @@
                 <table id="itemTable">
                     <thead>
                         <tr>
-                            <th>Jenis Pembelian</th>
+                            <th>Jenis Penjualan</th>
                             <th>Jumlah</th>
                             <th>Harga</th>
                             <th>Jenis Pembayaran</th>
@@ -76,7 +102,7 @@
                 <table id="summaryTable">
                     <thead>
                         <tr>
-                            <th>Jenis Pembelian</th>
+                            <th>Jenis Penjualan</th>
                             <th>Jumlah</th>
                             <th>Total Harga</th>
                         </tr>
@@ -91,7 +117,7 @@
         
         <footer>
             <p class="encouragement">Aku i kerjo cak, Ojo ditawar nemen nemen poo</p>
-            <p>Developed by Felisa X TRIXX</p>
+            <p>Developed by Felisa x TRIXX</p>
         </footer>
     </div>
     <script src="script.js"></script>
