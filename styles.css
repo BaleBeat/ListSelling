@@ -106,6 +106,10 @@ button:hover {
     background-color: #c2185b;
 }
 
+.table-responsive {
+    overflow-x: auto;
+}
+
 table {
     width: 100%;
     border-collapse: collapse;
@@ -156,12 +160,19 @@ button.edit-btn:hover {
 
 .totals {
     margin-top: 15px;
-    text-align: right;
+    text-align: center; /* Menjaga konten di tengah */
 }
 
 .totals h3 {
     font-size: 16px;
     color: #444;
+    margin: 0; /* Menghilangkan margin default */
+}
+
+#grandTotal {
+    font-size: 20px;
+    font-weight: bold;
+    color: #d81b60;
 }
 
 footer {
